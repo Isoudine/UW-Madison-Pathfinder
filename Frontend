@@ -1,0 +1,131 @@
+import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Scanner;
+import java.util.NoSuchElementException;
+
+public class Frontend implements FrontendInterface {
+
+    private final Scanner scnr;
+    private BackendInterface backend;
+    private boolean exit;
+
+    public Frontend(Scanner scnr, BackendInterface backend) {
+        this.scnr = scnr;
+        this.backend = backend;
+        startApplication();
+    }
+    public Frontend(Scanner scanner, BackendPlaceholder backend) {
+        this.backend = backend;
+        this.scnr = scanner;
+        startApplication();
+    }
+
+    @Override
+    public void startApplication() {
+        while (!exit) {
+            userInterface();
+        }
+    }
+
+    @Override
+    public void userInterface() {
+        System.out.println("Welcome to Path Finder!\nPlease enter what command you would like to do: ");
+        System.out.println("(1) Load the file \n(2) Show data statistics\n(3) Calculate shortest path\n" +
+                "(4) Exit App");
+
+        String userInput = scnr.next().toLowerCase();
+
+        switch (userInput) {
+            case "1":
+                System.out.println("\nEnter file name: or press 4 ");
+                String filename = scnr.next();
+                loadFile(filename);
+                break;
+
+            case "2":
+                showDatasetStatistics();
+                break;
+            case "3":
+                System.out.println("Enter start building: ");
+                scnr.nextLine();
+                String start = scnr.nextLine();
+                System.out.println("Enter end building: ");
+                String end = scnr.nextLine();
+                findShortestPath(start, end);
+                break;
+            case "4":
+                exitApp();
+                break;
+            default:
+                System.out.println("That is not valid; please type 1, 2, 3, or 4");
+        }
+    }
+
+    @Override
+    public void loadFile(String filename) {
+        try {
+            DijkstraGraph<String, Double> graph = new DijkstraGraph<>(new PlaceholderMap<>());
+            backend = new Backend(graph); // Update the backend field instead of redeclaring
+            backend.readDataFromFile(filename);
+            System.out.println("File was loaded successfully!");
+        } catch (FileNotFoundException e) {
+            System.out.println("The file name is not valid; please try again!");
+        }
+    }
+
+
+    @Override
+    public Object showDatasetStatistics() {
+        String stats = backend.getStats();
+        System.out.println("The data statistics are: " + stats);
+        System.out.println("Enter 2 to go back to the main menu");
+        while (true) {
+            String userInput = scnr.nextLine();
+            if (userInput.equals("2")) {
+                break;
+            } else {
+                System.out.println("Please enter a valid command");
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void findShortestPath(String startBuilding, String destinationBuilding) {
+        try {
+            System.out.println("\nThe Shortest Path is:");
+
+            UWPathInterface shortestPath =  backend.getShortestPath(startBuilding, destinationBuilding);
+
+            List<String> buildings = shortestPath.getPath();
+            List<Double> walkTimes = shortestPath.getWalkingTime();
+
+            for (int i = 0; i < buildings.size() - 1; i++) {
+                System.out.printf("Go from %s to %s in %.2f seconds%n",
+                        buildings.get(i), buildings.get(i + 1), walkTimes.get(i));
+            }
+
+            System.out.printf("The total time to go from %s to %s is %.2f seconds%n%n",
+                    startBuilding, destinationBuilding, shortestPath.getTotalPathCost());
+        } catch (NoSuchElementException e) {
+            System.out.println("No path found between " + startBuilding + " and " + destinationBuilding);
+        }
+    }
+
+
+
+    @Override
+    public void exitApp() {
+        System.out.println("You have exited the app; thank you!");
+        exit = true;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Backend backend = new Backend(new DijkstraGraph<String, Double>(new PlaceholderMap<>()));
+        Frontend frontend = new Frontend(scanner, backend);
+        frontend.startApplication();
+
+        scanner.close();
+    }
+}
