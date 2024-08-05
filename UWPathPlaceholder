@@ -1,0 +1,50 @@
+import java.util.ArrayList;
+
+public class UWPathPlaceholder implements UWPathInterface<String, Double> {
+
+    private ArrayList<String> buildings;
+    private ArrayList<Double> edges;
+    private String startPoint;
+    private String endPoint;
+
+    public UWPathPlaceholder() {
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+        this.buildings = new ArrayList<>();
+        this.edges = new ArrayList<>();
+    }
+
+    /**
+     * Gets a list of buildings that is the path from the start to end point.
+     *
+     * @return ArrayList of buildings
+     */
+    public ArrayList<String> getPath() {
+        // Placeholder implementation
+        // You can modify this to return an actual path based on your requirements
+        buildings.add("Memorial Union");
+        buildings.add("Science Hall");
+        buildings.add("Helen C White Hall");
+        buildings.add("Education Building");
+        return buildings;
+    }
+
+    /**
+     * Gets a list of walking times that represents the path from start to end point.
+     *
+     * @return ArrayList of walking times
+     */
+    public ArrayList<Double> getWalkingTime() {
+        // Placeholder implementation
+        // You can modify this to return actual walking times based on your requirements
+        edges.add(105.8);
+        edges.add(101.80000000000001);
+        edges.add(182.19999999999993);
+        return edges;
+    }
+
+    @Override
+    public double getTotalPathCost() {
+        return 105.8 + 101.80000000000001 + 182.19999999999993;
+    }
+}
