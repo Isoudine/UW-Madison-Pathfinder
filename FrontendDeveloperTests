@@ -1,0 +1,139 @@
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.Scanner;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * JUnit tests for the Frontend class, focusing on the interaction between Frontend and Backend.
+ * These tests cover various commands (load file, show dataset statistics, calculate shortest path, and exit app)
+ */
+public class FrontendDeveloperTests {
+
+    private Frontend frontend;
+    private BackendPlaceholder backend; // Placeholder backend for testing
+
+    @BeforeEach
+    public void setUp() {
+        // Instantiate your Frontend class with a mock backend for testing
+        backend = new BackendPlaceholder(); // Placeholder implementation for testing
+        //frontend = new Frontend(new Scanner(System.in), backend); // Assuming constructor takes backend and Scanner
+    }
+    /**
+     * Test the "Load File" command (Command 1).
+     * Verifies that the frontend correctly processes the load file command,
+     * prompts the user for a filename, and displays a success message.
+     */
+    @Test
+    public void testLoadFileCommand() {
+        TextUITester tester = new TextUITester("1\ncampus.dot\n4\n");
+        frontend = new Frontend(new Scanner(System.in), backend);
+        String output = tester.checkOutput();
+        assertTrue(output.contains("Enter file name: ") && output.contains("File was loaded successfully!"));
+    }
+    /**
+     * Test the "Show Dataset Statistics" command (Command 2).
+     * Verifies that the frontend correctly processes the show dataset statistics command,
+     * displays the statistics, and allows the user to return to the main menu.
+     */
+    @Test
+    public void testShowDatasetStatisticsCommand() {
+        TextUITester tester = new TextUITester("2\n2\n4");
+        frontend = new Frontend(new Scanner(System.in), backend);
+        String output = tester.checkOutput();
+        assertTrue(output.contains("Total buildings = 10\nTotal edges = 10\nTotal time = 10"));
+    }
+    /**
+     * Test the "Calculate Shortest Path" command (Command 3).
+     * Verifies that the frontend correctly processes the calculate shortest path command,
+     * prompts the user for start and end buildings, and displays the shortest path and total time.
+     */
+    @Test
+    public void testShortestPathCommand() {
+        TextUITester tester = new TextUITester("1\ncampus.dot\n3\nRadio Hall\nHelen C White Hall\n4");
+        frontend = new Frontend(new Scanner(System.in), backend);
+        frontend.findShortestPath("Radio Hall", "Helen C White Hall");
+        String output = tester.checkOutput();
+        assertTrue(output.contains("\nThe Shortest Path is:\n" +
+                "Go from Radio Hall to Helen C White Hall in 118.00 seconds\n" +
+                "The total time to go from Radio Hall to Helen C White Hall is 118.00 seconds"));
+    }
+    /**
+     * Test the frontend's handling of invalid input.
+     * Verifies that the frontend correctly handles input other than 1, 2, 3, or 4,
+     * and prompts the user to enter a valid command.
+     */
+    @Test
+    public void testInvalidInput() {
+        TextUITester tester = new TextUITester("1\ncampus.dot\n5\n4\n");
+        frontend = new Frontend(new Scanner(System.in), backend);
+        String output = tester.checkOutput();
+        System.out.println(output);
+        assertTrue(output.contains("That is not valid; please type 1, 2, 3, or 4"));
+
+    }
+    /**
+     * Test the "Exit App" command (Command 4).
+     * Verifies that the frontend correctly processes the exit app command and displays an exit message.
+     */
+    @Test
+    public void testExitAppCommand() {
+        TextUITester tester = new TextUITester("4\n");
+        frontend = new Frontend(new Scanner(System.in), backend);
+        String output = tester.checkOutput();
+        assertTrue(output.contains("\nYou have exited the app; thank you!"));
+    }
+    /**
+     * Integration Test for exiting the application.
+     * Verifies that the frontend correctly exits the application when the user chooses to exit.
+     */
+    @Test
+    public void integrationTestExitApp() {
+        TextUITester tester = new TextUITester("4\n");
+        Backend backend = new Backend(new DijkstraGraph<>(new PlaceholderMap<>()));
+        Frontend frontend = new Frontend(new Scanner(System.in), backend);
+        frontend.startApplication();
+        String output = tester.checkOutput();
+        assertTrue(output.contains("\nYou have exited the app; thank you!"));
+    }
+    /**
+     * Integration Test with invalid input.
+     * Verifies that the frontend correctly handles invalid input during user interaction.
+     */
+    @Test
+    public void IntegrationTest2() {
+        TextUITester tester = new TextUITester("1\ncampus.dot\n20\n4\n");
+        frontend = new Frontend(new Scanner(System.in), backend);
+        String output = tester.checkOutput();
+        System.out.println(output);
+        assertTrue(output.contains("That is not valid; please type 1, 2, 3, or 4"));
+
+
+    }
+    /**
+     * Integration Test for getting the shortest path.
+     * Verifies that the frontend correctly interacts with the backend to calculate and display the shortest path.
+     */
+    @Test
+    public void integrationTestGetShortestPath() {
+        TextUITester tester = new TextUITester("1\ncampus.dot\n3\nMemorial Union\nEducation Building\n4\n");
+        Backend backend = new Backend(new DijkstraGraph<>(new PlaceholderMap<>()));
+        Frontend frontend = new Frontend(new Scanner(System.in), backend);
+        frontend.startApplication();
+        String output = tester.checkOutput();
+        assertTrue(output.contains("The Shortest Path is:"));
+    }
+    /**
+     * Integration Test for loading a file.
+     * Verifies that the frontend correctly interacts with the backend to load a file and displays a success message.
+     */
+    @Test
+    public void integrationTestLoadFile() {
+        TextUITester tester = new TextUITester("1\ncampus.dot\n4\n");
+        Backend backend = new Backend(new DijkstraGraph<>(new PlaceholderMap<>()));
+        Frontend frontend = new Frontend(new Scanner(System.in), backend);
+        frontend.startApplication();
+        String output = tester.checkOutput();
+        assertTrue(output.contains("Enter file name: ") && output.contains("File was loaded successfully!"));
+    }
+
+}
