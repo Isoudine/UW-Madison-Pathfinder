@@ -1,0 +1,75 @@
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Backend implements BackendInterface<String, Double>{
+    private GraphADT<String, Double> graph;
+    public int edgeCount = 0;
+    public int nodeCount = 0;
+    public double totalWalkingTime = 0.0;
+    /**
+     * Constructor that sets the map that the graph uses.
+     *
+     * @param map the map that the graph uses to map a data object to the node object it is stored in
+     */
+    public Backend(GraphADT<String, Double> graph) {
+        this.graph = graph;
+    }
+
+
+    public void readDataFromFile(String fileName) throws FileNotFoundException {
+        try {
+            Path filePath = Paths.get(fileName);
+            List<String> lines = Files.readAllLines(filePath);
+            for (String line : lines) {
+                if (line.contains("seconds")) {
+                    String[] parts = line.split("\\[seconds=");
+                    String[] buildings = parts[0].trim().split("--");
+                    String building1 = buildings[0].trim().replaceAll("\"", "");
+                    String building2 = buildings[1].trim().replaceAll("\"", "");
+                    double distance = Double.parseDouble(parts[1].substring(0, parts[1].indexOf("]")));
+                    if (!graph.containsNode(building1)) {
+                        graph.insertNode(building1);
+                        nodeCount++;
+                    }
+                    if (!graph.containsNode(building2)) {
+                        graph.insertNode(building2);
+                        nodeCount++;
+                    }
+                    graph.insertEdge(building1, building2, distance);
+                    edgeCount++;
+                    totalWalkingTime += distance;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    public UWPathInterface<String, Double> getShortestPath(String start, String end) {
+        List<String> pathList = graph.shortestPathData(start, end);
+        List<Double> walkingTimeList = new ArrayList<>();
+        double totalTime = 0;
+        for(int  i = 0; i < pathList.size() - 1; i++) {
+            double currentWalkingTime = graph.getEdge(pathList.get(i), pathList.get(i + 1));
+            walkingTimeList.add(currentWalkingTime);
+            totalTime += currentWalkingTime;
+        }
+        return new UWPath(pathList, walkingTimeList, totalTime);
+    }
+
+
+    public String getStats() {
+        return (String) ("Node num: " + nodeCount + " Edge num: " + edgeCount + " total walking time: "
+                + totalWalkingTime);
+    }
+}
