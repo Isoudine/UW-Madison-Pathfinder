@@ -1,90 +1,91 @@
-Path Finder Application
-This is a Java application designed to calculate the shortest path between buildings using Dijkstra's algorithm. The application allows users to load data files representing graphs, calculate paths, and display statistics about the dataset.
+# UW-Madison Path Finder Application
 
-Features
-Load Graph Data: Load building and path data from a file.
-Show Dataset Statistics: Display information about the number of buildings, paths, and total time.
-Calculate Shortest Path: Compute the shortest path between two specified buildings.
-Interactive Command-Line Interface: Simple text-based user interface for interacting with the application.
-Getting Started
-Prerequisites
-Java 8 or later
-JUnit 5 for testing
-Installation
-Clone the repository:
+This is a Java application designed to calculate the shortest path between University buildings using Dijkstra's algorithm. The application allows users to load data files representing graphs, calculate paths, and display statistics about the dataset.
 
-bash
-Copy code
-git clone https://github.com/your-repo/path-finder.git
-cd path-finder
-Compile the Java files:
+## Features
 
-bash
-Copy code
-javac -d bin src/*.java
-Run the application:
+- **Load Graph Data:** Load building and path data from a file.
+- **Show Dataset Statistics:** Display information about the number of buildings, paths, and total time.
+- **Calculate Shortest Path:** Compute the shortest path between two specified buildings.
+- **Interactive Command-Line Interface:** Simple text-based user interface for interacting with the application.
 
-bash
-Copy code
-java -cp bin Frontend
-Usage
+## Getting Started
+
+### Prerequisites
+
+- Java 8 or later
+- JUnit 5 for testing
+
+### Installation
+
+1. **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/your-repo/path-finder.git
+    cd path-finder
+    ```
+
+2. **Compile the Java files:**
+
+    ```bash
+    javac -d bin src/*.java
+    ```
+
+3. **Run the application:**
+
+    ```bash
+    java -cp bin Frontend
+    ```
+
+## Usage
+
 When you start the application, you will see the following menu options:
 
-vbnet
-Copy code
+```plaintext
 Welcome to Path Finder!
-Please enter what command you would like to do:
+Please enter what command you would like to do: 
 (1) Load the file 
 (2) Show data statistics
 (3) Calculate shortest path
 (4) Exit App
-Commands
-Load File (1): Enter the name of the file containing the graph data. The file should be in a specific format with nodes and edges.
 
-Show Data Statistics (2): Display statistics about the loaded dataset, including the total number of buildings and paths.
+1
 
-Calculate Shortest Path (3): Enter the starting and destination buildings to calculate the shortest path between them.
-
-Exit App (4): Exit the application.
-
-Example
-Load a file named campus.dot:
-
-mathematica
-Copy code
-Enter file name: 
+Enter file name: or press 4 
 campus.dot
-Show data statistics:
 
-java
-Copy code
-Total buildings = 10
-Total edges = 15
-Calculate the shortest path from "Memorial Union" to "Education Building":
+File was loaded successfully!
 
-sql
-Copy code
+Welcome to Path Finder!
+Please enter what command you would like to do: 
+(1) Load the file 
+(2) Show data statistics
+(3) Calculate shortest path
+(4) Exit App
+
+3
+
 Enter start building: 
 Memorial Union
 Enter end building: 
-Education Building
+Union South
 
 The Shortest Path is:
-Go from Memorial Union to Education Building in 118.00 seconds
-The total time to go from Memorial Union to Education Building is 118.00 seconds
-Testing
+Go from Memorial Union to Radio Hall in 176.70 seconds
+Go from Radio Hall to Education Building in 113.00 seconds
+Go from Education Building to South Hall in 187.60 seconds
+Go from South Hall to Law Building in 112.80 seconds
+Go from Law Building to X01 in 174.70 seconds
+Go from X01 to Luther Memorial Church in 65.50 seconds
+Go from Luther Memorial Church to Noland Hall in 183.50 seconds
+Go from Noland Hall to Meiklejohn House in 124.20 seconds
+Go from Meiklejohn House to Computer Sciences and Statistics in 164.20 seconds
+Go from Computer Sciences and Statistics to Union South in 176.00 seconds
+The total time to go from Memorial Union to Union South is 1478.20 seconds
+```
+## Testing
+
 The application includes JUnit tests to verify the functionality of the graph and frontend components. Run the tests using:
 
-bash
-Copy code
+```bash
 java -cp bin:lib/junit-platform-console-standalone-1.8.1.jar org.junit.platform.console.ConsoleLauncher --scan-class-path
-Project Structure
-Frontend.java: Handles user interaction and input.
-Backend.java: Manages data loading, path calculation, and dataset statistics.
-DijkstraGraph.java: Implements Dijkstra's algorithm for shortest path calculation.
-Tests: Contains JUnit test classes for frontend and backend validation.
-Contributing
-Fork the repository.
-Create a new branch for your feature or bug fix.
-Commit your changes.
-Push your branch and submit a pull request.
